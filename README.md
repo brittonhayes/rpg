@@ -1,4 +1,7 @@
-# RPG
+# RPG ✨🕹️
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/brittonhayes/rpg)](https://goreportcard.com/report/github.com/brittonhayes/rpg)
+[![Go Reference](https://pkg.go.dev/badge/github.com/brittonhayes/rpg.svg)](https://pkg.go.dev/github.com/brittonhayes/rpg)
 
 > Create text-based role-playing games with Go
 
