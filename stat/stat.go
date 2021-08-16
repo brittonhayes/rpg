@@ -1,10 +1,10 @@
 package stat
 
 const (
-	Full  float32 = 100.00
-	Half  float32 = 50.00
-	Low   float32 = 15.00
-	Empty float32 = 0.00
+	Full  float64 = 100.00
+	Half  float64 = 50.00
+	Low   float64 = 15.00
+	Empty float64 = 0.00
 )
 
 const (

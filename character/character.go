@@ -1,10 +1,16 @@
 package character
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/brittonhayes/rpg/stat"
+)
+
+var (
+	ErrInvalidAttack = errors.New("attack kind does not match")
 )
 
 type Rank int
@@ -13,6 +19,7 @@ type Character struct {
 	Name      string
 	Rank      Rank
 	Stats     map[string]*Stat
+	Attacks   Attacks
 	Abilities []Ability
 	Inventory []Item
 	Playable  bool
@@ -28,12 +35,17 @@ func New(options ...Option) *Character {
 			stat.Health:  NewStat(stat.Full),
 			stat.Stamina: NewStat(stat.Full),
 		}
+		defaultAttacks = Attacks{
+			Light: NewAttack("Basic Light", LightAttack, 5.00),
+			Heavy: NewAttack("Basic Heavy", HeavyAttack, 8.00),
+		}
 	)
 
 	p := &Character{
 		Name:      defaultName,
 		Rank:      defaultRank,
 		Stats:     defaultStats,
+		Attacks:   defaultAttacks,
 		Abilities: nil,
 		Inventory: nil,
 		Playable:  false,
@@ -52,19 +64,36 @@ func IsPlayer() Option {
 	}
 }
 
-func WithStamina(stamina float32) Option {
+func WithAttacks(light, heavy *Attack) Option {
+	return func(character *Character) {
+		if light.Kind != LightAttack || heavy.Kind != HeavyAttack {
+			log.Fatalln(ErrInvalidAttack)
+		}
+
+		character.Attacks.Light = light
+		character.Attacks.Heavy = heavy
+	}
+}
+
+func WithName(name string) Option {
+	return func(character *Character) {
+		character.Name = name
+	}
+}
+
+func WithStamina(stamina float64) Option {
 	return func(character *Character) {
 		character.Stats[stat.Stamina] = &Stat{value: stamina}
 	}
 }
 
-func WithHealth(health float32) Option {
+func WithHealth(health float64) Option {
 	return func(character *Character) {
 		character.Stats[stat.Health] = &Stat{value: health}
 	}
 }
 
-func WithArmor(armor float32) Option {
+func WithArmor(armor float64) Option {
 	return func(character *Character) {
 		character.Stats[stat.Armor] = &Stat{value: armor}
 	}
@@ -102,37 +131,6 @@ func (c *Character) Health() *Stat {
 	}
 
 	return &Stat{value: 0.00}
-}
-
-func (c *Character) Attack(target *Character, damage float32) {
-	target.hit(damage)
-}
-
-func (c *Character) IsDead() bool {
-	return c.Stats[stat.Health].value <= 0.00
-}
-
-func (c *Character) hit(damage float32) {
-	if c.Stats[stat.Health] == nil {
-		return
-	}
-
-	dealt := damage
-	for ok := true; ok; ok = dealt >= 0.00 {
-		if c.Stats[stat.Armor] != nil {
-			c.Stats[stat.Armor].Down(damage)
-			dealt -= damage
-			if dealt <= 0.00 {
-				break
-			}
-		}
-
-		c.Stats[stat.Health].Down(damage)
-		dealt -= damage
-		if dealt <= 0.00 {
-			break
-		}
-	}
 }
 
 func (r Rank) String() string {
