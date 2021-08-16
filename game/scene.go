@@ -6,7 +6,6 @@ import (
 
 type Scene struct {
 	ID          int
-	Player      character.Player
 	Environment Environment
 	Events      []Event
 }
