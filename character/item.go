@@ -5,9 +5,3 @@ type Item struct {
 	MinRank   int
 	Modifiers []Modifier
 }
-
-type Health float32
-
-type Modifier interface {
-	Apply(stat float32) error
-}

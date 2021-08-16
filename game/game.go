@@ -41,9 +41,9 @@ func New(options ...Option) *Game {
 	return game
 }
 
-func WithContext(ctx context.Context, key, value interface{}) Option {
+func WithContext(ctx context.Context) Option {
 	return func(game *Game) {
-		game.ctx = context.WithValue(ctx, key, value)
+		game.ctx = ctx
 	}
 }
 
