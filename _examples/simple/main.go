@@ -41,7 +41,6 @@ func main() {
 		log.Attack(player.Name, enemy.Name, attack.Name, attack.Damage)
 
 		player.Attack(enemy, player.Attacks.Heavy)
-		player.RankUp(1)
 
 		log.Status(player.Name, player.Stat(stat.Health).String(), player.Stat(stat.Armor).String())
 		log.Status(enemy.Name, enemy.Stat(stat.Health).String(), enemy.Stat(stat.Armor).String())
