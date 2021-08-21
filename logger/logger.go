@@ -9,14 +9,21 @@ type Logger struct {
 	Writer io.Writer
 }
 
+const (
+	AttackTemplate = "{{.Attacker}} attacked {{.Target}} with {{.Attack}} for {{.Damage}} pts of damage"
+	StatusTemplate = `
+Name: {{.Character}}
+Health: {{.Health}}
+Armor: {{.Armor}}
+`
+)
+
 func NewLogger(writer io.Writer) *Logger {
 	return &Logger{Writer: writer}
 }
 
 func (l *Logger) Attack(attacker string, target string, attack string, damage float64) error {
-	tpl, err := template.New("log").Parse(`
-{{.Attacker}} attacked {{.Target}} with {{.Attack}} for {{.Damage}} pts of damage
-`)
+	tpl, err := template.New("log").Parse(AttackTemplate)
 	if err != nil {
 		return err
 	}
@@ -30,11 +37,7 @@ func (l *Logger) Attack(attacker string, target string, attack string, damage fl
 }
 
 func (l *Logger) Status(character string, health string, armor string) error {
-	tpl, err := template.New("log").Parse(`
-Name: {{.Character}}
-Health: {{.Health}}
-Armor: {{.Armor}}
-`)
+	tpl, err := template.New("log").Parse(StatusTemplate)
 	if err != nil {
 		return err
 	}
