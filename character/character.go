@@ -13,6 +13,19 @@ var (
 	ErrInvalidAttack = errors.New("attack kind does not match")
 )
 
+var (
+	defaultName  = "Character 1"
+	defaultRank  = Rank(0)
+	defaultStats = map[string]*Stat{
+		stat.Health:  NewStat(stat.Full),
+		stat.Stamina: NewStat(stat.Full),
+	}
+	defaultAttacks = Attacks{
+		Light: NewAttack("Basic Light", LightAttack, 5.00),
+		Heavy: NewAttack("Basic Heavy", HeavyAttack, 8.00),
+	}
+)
+
 type Rank int
 
 type Character struct {
@@ -28,18 +41,6 @@ type Character struct {
 type Option func(*Character)
 
 func New(options ...Option) *Character {
-	var (
-		defaultName  = "Character 1"
-		defaultRank  = Rank(0)
-		defaultStats = map[string]*Stat{
-			stat.Health:  NewStat(stat.Full),
-			stat.Stamina: NewStat(stat.Full),
-		}
-		defaultAttacks = Attacks{
-			Light: NewAttack("Basic Light", LightAttack, 5.00),
-			Heavy: NewAttack("Basic Heavy", HeavyAttack, 8.00),
-		}
-	)
 
 	p := &Character{
 		Name:      defaultName,
