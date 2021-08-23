@@ -17,7 +17,6 @@ var (
 	defaultName  = "Character 1"
 	defaultRank  = Rank(0)
 	defaultStats = map[string]*Stat{
-		stat.Health:  NewStat(stat.Full),
 		stat.Stamina: NewStat(stat.Full),
 	}
 	defaultAttacks = Attacks{
@@ -31,6 +30,8 @@ type Rank int
 type Character struct {
 	Name      string
 	Rank      Rank
+	Health    float64
+	Armor     float64
 	Stats     map[string]*Stat
 	Attacks   Attacks
 	Abilities []Ability
@@ -44,6 +45,8 @@ func New(options ...Option) *Character {
 
 	p := &Character{
 		Name:      defaultName,
+		Health:    100.00,
+		Armor:     0.00,
 		Rank:      defaultRank,
 		Stats:     defaultStats,
 		Attacks:   defaultAttacks,
@@ -90,13 +93,13 @@ func WithStamina(stamina float64) Option {
 
 func WithHealth(health float64) Option {
 	return func(character *Character) {
-		character.Stats[stat.Health] = &Stat{value: health}
+		character.Health = health
 	}
 }
 
 func WithArmor(armor float64) Option {
 	return func(character *Character) {
-		character.Stats[stat.Armor] = &Stat{value: armor}
+		character.Armor = armor
 	}
 }
 
@@ -124,18 +127,16 @@ func (c *Character) Stat(name string) *Stat {
 	return &Stat{value: 0.00}
 }
 
-func (c *Character) Health() *Stat {
-	for key, value := range c.Stats {
-		if key == stat.Health {
-			return value
-		}
-	}
-
-	return &Stat{value: 0.00}
-}
-
 func (r Rank) String() string {
 	return fmt.Sprintf("Rank: %d", r)
+}
+
+func (c *Character) IsCalled() string {
+	return c.Name
+}
+
+func (c *Character) IsPlayable() bool {
+	return c.Playable
 }
 
 func (c *Character) RankTo(rank int) {

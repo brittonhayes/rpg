@@ -71,8 +71,8 @@ func TestLogger_Status(t *testing.T) {
 	}
 	type args struct {
 		character string
-		health    string
-		armor     string
+		health    float64
+		armor     float64
 	}
 	tests := []struct {
 		name      string
@@ -87,8 +87,8 @@ func TestLogger_Status(t *testing.T) {
 			},
 			args: args{
 				character: "Mario",
-				health:    "100",
-				armor:     "100",
+				health:    100.00,
+				armor:     100.00,
 			},
 			assertion: assert.NoError,
 		},

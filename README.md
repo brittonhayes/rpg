@@ -68,3 +68,25 @@ player.Attack(enemy, player.Attacks.Heavy)
 // Log the attack
 log.Attack(player.Name, enemy.Name, attack.Name, attack.Damage)
 ```
+
+## Dialogue
+
+```go
+// Speak as a player
+dialogue.Say(player, "Hey there! I'm the main character.")
+
+// Speak as an NPC
+dialogue.Say(enemy, "I'm an enemy. You can tell by my different output color.")
+
+// Speak as an NPC that died in combat. This will be prepended with "[DEAD]".
+enemy.Health = 0.00
+dialogue.Say(enemy, "I've been defeated")
+
+// Ask a question to the player and handle their answer
+// with a custom function
+dialogue.Ask(player, "What should we do next boss?", func(answer string) error {
+    log.Log(logger.LevelChat, fmt.Sprintf("Are you sure you want to do: %q?", answer))
+    return nil
+  }
+)
+```

@@ -1,9 +1,5 @@
 package character
 
-import (
-	"github.com/brittonhayes/rpg/stat"
-)
-
 type AttackType int
 
 type Attacks struct {
@@ -27,7 +23,7 @@ func NewAttack(name string, kind AttackType, damage float64) *Attack {
 }
 
 func (c *Character) IsDead() bool {
-	return c.Stats[stat.Health].value <= 0.00
+	return c.Health <= 0.00
 }
 
 func (c *Character) Attack(target *Character, attack *Attack) {
@@ -35,24 +31,24 @@ func (c *Character) Attack(target *Character, attack *Attack) {
 		attack = &Attack{Name: "Basic", Damage: 5.00}
 	}
 
-	if target.Stats[stat.Health] == nil {
+	if target.Health <= 0.00 {
 		return
 	}
 
 	dealt := attack.Damage
 	for ok := true; ok; ok = dealt >= 0.00 {
-		if target.Stats[stat.Armor] != nil {
-			target.Stats[stat.Armor].Down(attack.Damage)
+		if target.Armor >= 0.00 {
+			target.Armor -= attack.Damage
 			dealt -= attack.Damage
 			if dealt <= 0.00 {
-				break
+				continue
 			}
 		}
 
-		target.Stats[stat.Health].Down(attack.Damage)
+		target.Health -= attack.Damage
 		dealt -= attack.Damage
 		if dealt <= 0.00 {
-			break
+			continue
 		}
 	}
 }
