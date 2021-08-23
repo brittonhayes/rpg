@@ -69,7 +69,7 @@ player.Attack(enemy, player.Attacks.Heavy)
 log.Attack(player.Name, enemy.Name, attack.Name, attack.Damage)
 ```
 
-## Dialogue
+## Dialogue 💬
 
 ```go
 // Speak as a player
