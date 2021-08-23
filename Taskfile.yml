@@ -1,0 +1,14 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: test
+    silent: true
+
+  test:
+    desc: Run go tests
+    cmds:
+      - go test -race -covermode=atomic -coverprofile=coverage.out ./...
