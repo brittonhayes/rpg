@@ -23,6 +23,8 @@ func TestNew(t *testing.T) {
 			},
 			want: &Character{
 				Name:      defaultName,
+				Health:    100.00,
+				Armor:     0.00,
 				Rank:      defaultRank,
 				Stats:     defaultStats,
 				Attacks:   defaultAttacks,
@@ -141,39 +143,33 @@ func TestWithStamina(t *testing.T) {
 }
 
 func TestWithHealth(t *testing.T) {
-	type args struct {
-		health float64
-	}
 	tests := []struct {
-		name string
-		args args
-		want float64
+		name   string
+		health float64
+		want   float64
 	}{
-		{name: "Test with health", args: args{health: 20.00}, want: 20.00},
+		{name: "Test with health", health: 20.00, want: 20.00},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := New(WithHealth(tt.args.health))
-			assert.Equal(t, tt.want, c.Stats[stat.Health].value)
+			c := New(WithHealth(tt.health))
+			assert.Equal(t, tt.want, c.Health)
 		})
 	}
 }
 
 func TestWithArmor(t *testing.T) {
-	type args struct {
-		armor float64
-	}
 	tests := []struct {
-		name string
-		args args
-		want float64
+		name  string
+		armor float64
+		want  float64
 	}{
-		{name: "Test with armor", args: args{armor: 20.00}, want: 20.00},
+		{name: "Test with armor", armor: 20.00, want: 20.00},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := New(WithArmor(tt.args.armor))
-			assert.Equal(t, tt.want, c.Stats[stat.Armor].value)
+			c := New(WithArmor(tt.armor))
+			assert.Equal(t, tt.want, c.Armor)
 		})
 	}
 }
@@ -241,7 +237,7 @@ func TestCharacter_Stat(t *testing.T) {
 				Name: defaultName,
 				Rank: defaultRank,
 				Stats: map[string]*Stat{
-					"HEALTH": {
+					"CHARM": {
 						value: 100.00,
 					},
 				},
@@ -251,7 +247,7 @@ func TestCharacter_Stat(t *testing.T) {
 				Playable:  true,
 			},
 			args: args{
-				name: stat.Health,
+				name: "CHARM",
 			},
 			want: &Stat{
 				value: 100.00,
@@ -275,52 +271,23 @@ func TestCharacter_Stat(t *testing.T) {
 }
 
 func TestCharacter_Health(t *testing.T) {
-	type fields struct {
-		Name      string
-		Rank      Rank
-		Stats     map[string]*Stat
-		Attacks   Attacks
-		Abilities []Ability
-		Inventory []Item
-		Playable  bool
-	}
 	tests := []struct {
 		name   string
-		fields fields
-		want   *Stat
+		health float64
+		want   float64
 	}{
 		{
-			name: "Test character health",
-			fields: fields{
-				Name: defaultName,
-				Rank: defaultRank,
-				Stats: map[string]*Stat{
-					"HEALTH": {
-						value: 100.00,
-					},
-				},
-				Attacks:   defaultAttacks,
-				Abilities: nil,
-				Inventory: nil,
-				Playable:  true,
-			},
-			want: &Stat{
-				value: 100.00,
-			},
+			name:   "Test character health",
+			health: 100.00,
+			want:   100.00,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Character{
-				Name:      tt.fields.Name,
-				Rank:      tt.fields.Rank,
-				Stats:     tt.fields.Stats,
-				Attacks:   tt.fields.Attacks,
-				Abilities: tt.fields.Abilities,
-				Inventory: tt.fields.Inventory,
-				Playable:  tt.fields.Playable,
+				Health: tt.health,
 			}
-			assert.Equal(t, tt.want, c.Health())
+			assert.Equal(t, tt.want, c.Health)
 		})
 	}
 }

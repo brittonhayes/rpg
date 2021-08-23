@@ -22,8 +22,8 @@ const (
 )
 
 const (
-	TemplateAttack = `{{.Attacker}} attacked {{.Target}} with {{.Attack}} for {{.Damage}} pts of damage`
-	TemplateStatus = `Name={{.Character}} Health={{.Health}} Armor={{.Armor}}`
+	templateAttack = `{{.Attacker}} attacked {{.Target}} with {{.Attack}} for {{.Damage}} pts of damage`
+	templateStatus = `Name={{.Character}} Health={{.Health}} Armor={{.Armor}}`
 )
 
 func NewLogger(writer io.Writer) *Logger {
@@ -59,7 +59,7 @@ func (l *Logger) Log(level Level, msg string) {
 
 func (l *Logger) Attack(attacker string, target string, attack string, damage float64) error {
 	prefix := selectPrefix(LevelCombat)
-	tpl, err := template.New("log").Parse(prefix + TemplateAttack + "\n")
+	tpl, err := template.New("log").Parse(prefix + templateAttack + "\n")
 	if err != nil {
 		return err
 	}
@@ -72,9 +72,9 @@ func (l *Logger) Attack(attacker string, target string, attack string, damage fl
 	})
 }
 
-func (l *Logger) Status(character string, health string, armor string) error {
+func (l *Logger) Status(character string, health float64, armor float64) error {
 	prefix := selectPrefix(LevelInfo)
-	tpl, err := template.New("log").Parse(prefix + TemplateStatus + "\n")
+	tpl, err := template.New("log").Parse(prefix + templateStatus + "\n")
 	if err != nil {
 		return err
 	}
