@@ -85,7 +85,7 @@ dialogue.Say(enemy, "I've been defeated")
 // Ask a question to the player and handle their answer
 // with a custom function
 dialogue.Ask(player, "What should we do next boss?", func(answer string) error {
-    log.Log(logger.LevelChat, fmt.Sprintf("Are you sure you want to do: %q?", answer))
+    dialogue.Say(enemy, fmt.Sprintf("Do you you really want to %q?", answer))
     return nil
   }
 )
