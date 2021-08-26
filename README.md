@@ -5,6 +5,8 @@
 
 > Create text-based role-playing games with Go
 
+<image src="./logo.png" width=500/>
+
 ## Installation 📥
 
 ```shell
