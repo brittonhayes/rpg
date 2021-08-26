@@ -2,9 +2,9 @@ package character
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"strings"
+	"sync/atomic"
 
 	"github.com/brittonhayes/rpg/stat"
 )
@@ -14,8 +14,9 @@ var (
 )
 
 var (
+	defaultID    uint64
 	defaultName  = "Character 1"
-	defaultRank  = Rank(0)
+	defaultRank  = uint64(1)
 	defaultStats = map[string]*Stat{
 		stat.Stamina: NewStat(stat.Full),
 	}
@@ -25,11 +26,10 @@ var (
 	}
 )
 
-type Rank int
-
 type Character struct {
+	ID        uint64
 	Name      string
-	Rank      Rank
+	Rank      uint64
 	Health    float64
 	Armor     float64
 	Stats     map[string]*Stat
@@ -44,6 +44,7 @@ type Option func(*Character)
 func New(options ...Option) *Character {
 
 	p := &Character{
+		ID:        atomic.AddUint64(&defaultID, 1),
 		Name:      defaultName,
 		Health:    100.00,
 		Armor:     0.00,
@@ -105,7 +106,7 @@ func WithArmor(armor float64) Option {
 
 func WithRank(rank int) Option {
 	return func(character *Character) {
-		character.Rank = Rank(rank)
+		character.Rank = uint64(rank)
 	}
 }
 
@@ -127,10 +128,6 @@ func (c *Character) Stat(name string) *Stat {
 	return &Stat{value: 0.00}
 }
 
-func (r Rank) String() string {
-	return fmt.Sprintf("Rank: %d", r)
-}
-
 func (c *Character) IsCalled() string {
 	return c.Name
 }
@@ -139,10 +136,10 @@ func (c *Character) IsPlayable() bool {
 	return c.Playable
 }
 
-func (c *Character) RankTo(rank int) {
-	c.Rank = Rank(rank)
+func (c *Character) RankTo(rank uint64) {
+	c.Rank = rank
 }
 
-func (c *Character) RankUp(rank int) {
-	c.Rank += Rank(rank)
+func (c *Character) RankUp(rank uint64) {
+	c.Rank += rank
 }
