@@ -32,22 +32,14 @@ func TestNewAttack(t *testing.T) {
 	}
 }
 
-func TestCharacter_IsDead(t *testing.T) {
+func Test(t *testing.T) {
 	tests := []struct {
 		name   string
 		health float64
 		want   bool
 	}{
-		{
-			name:   "Test character is dead",
-			health: 0.00,
-			want:   true,
-		},
-		{
-			name:   "Test character is not dead",
-			health: 100.00,
-			want:   false,
-		},
+		{name: "Test character is dead", health: 0.00, want: true},
+		{name: "Test character is not dead", health: 100.00, want: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -60,35 +52,38 @@ func TestCharacter_IsDead(t *testing.T) {
 }
 
 func TestCharacter_Attack(t *testing.T) {
-	type args struct {
-		target *Character
-		attack *Attack
-	}
 	tests := []struct {
 		name   string
-		args   args
+		target *Character
+		attack *Attack
 		want   float64
 	}{
 		{
-			name: "Test character attack",
-			args: args{
-				target: &Character{
-					Health: 100.00,
-				},
-				attack: &Attack{
-					Name:   "Test attack",
-					Kind:   LightAttack,
-					Damage: 10.00,
-				},
+			name:   "Test character light attack",
+			target: &Character{Health: 100.00},
+			attack: &Attack{
+				Name:   "Light attack",
+				Kind:   LightAttack,
+				Damage: 10.00,
 			},
 			want: 90.00,
+		},
+		{
+			name:   "Test character heavy attack",
+			target: &Character{Health: 100.00},
+			attack: &Attack{
+				Name:   "Heavy attack",
+				Kind:   HeavyAttack,
+				Damage: 40.00,
+			},
+			want: 60.00,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &Character{}
-			c.Attack(tt.args.target, tt.args.attack)
-			assert.Equal(t, tt.want, tt.args.target.Health)
+			c.Attack(tt.target, tt.attack)
+			assert.Equal(t, tt.want, tt.target.Health)
 		})
 	}
 }

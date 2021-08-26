@@ -2,103 +2,55 @@ package logger
 
 import (
 	"bytes"
-	"io"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewLogger(t *testing.T) {
-	tests := []struct {
-		name       string
-		want       *Logger
-		wantWriter string
-	}{
-		{name: "testing logger", want: &Logger{Writer: &bytes.Buffer{}}, wantWriter: ""},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			writer := &bytes.Buffer{}
-			assert.Equal(t, tt.want, NewLogger(writer))
-			assert.Equal(t, tt.wantWriter, writer.String())
-		})
-	}
+func prefix(level string) string {
+	return fmt.Sprintf("%-8s", strings.ToUpper(level))
 }
 
-func TestLogger_Attack(t *testing.T) {
-	type fields struct {
-		Writer io.Writer
-	}
-	type args struct {
-		attacker string
-		target   string
-		attack   string
-		damage   float64
-	}
-	tests := []struct {
-		name      string
-		fields    fields
-		args      args
-		assertion assert.ErrorAssertionFunc
-	}{
-		{
-			name: "Test attack log",
-			fields: fields{
-				Writer: &bytes.Buffer{},
-			},
-			args: args{
-				attacker: "Mario",
-				target:   "Bowser",
-				attack:   "Stomp",
-				damage:   float64(10.00),
-			},
-			assertion: assert.NoError,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			l := &Logger{
-				Writer: tt.fields.Writer,
-			}
-			tt.assertion(t, l.Attack(tt.args.attacker, tt.args.target, tt.args.attack, tt.args.damage))
-		})
-	}
-}
+func TestLogger(t *testing.T) {
+	t.Run("new logger", func(t *testing.T) {
+		arg := &bytes.Buffer{}
+		expect := &Logger{Writer: &bytes.Buffer{}}
 
-func TestLogger_Status(t *testing.T) {
-	type fields struct {
-		Writer io.Writer
-	}
-	type args struct {
-		character string
-		health    float64
-		armor     float64
-	}
-	tests := []struct {
-		name      string
-		fields    fields
-		args      args
-		assertion assert.ErrorAssertionFunc
-	}{
-		{
-			name: "",
-			fields: fields{
-				Writer: &bytes.Buffer{},
-			},
-			args: args{
-				character: "Mario",
-				health:    100.00,
-				armor:     100.00,
-			},
-			assertion: assert.NoError,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			l := &Logger{
-				Writer: tt.fields.Writer,
-			}
-			tt.assertion(t, l.Status(tt.args.character, tt.args.health, tt.args.armor))
-		})
-	}
+		assert.Equal(t, expect, NewLogger(arg))
+	})
+
+	t.Run("logger log info", func(t *testing.T) {
+		arg := "Hello"
+		field := &bytes.Buffer{}
+		expect := fmt.Sprintln(prefix("INFO"), arg)
+
+		l := NewLogger(field)
+		l.Log(LevelInfo, arg)
+		assert.Equal(t, expect, field.String())
+	})
+
+	t.Run("logger attack", func(t *testing.T) {
+		argAttacker := "Mario"
+		argTarget := "Bowser"
+		argAttack := "Stomp"
+		argDamage := 100.00
+
+		field := &bytes.Buffer{}
+
+		l := &Logger{Writer: field}
+		assert.NoError(t, l.Attack(argAttacker, argTarget, argAttack, argDamage))
+	})
+
+	t.Run("logger attack", func(t *testing.T) {
+		argCharacter := "Mario"
+		argHealth := 100.00
+		argArmor := 100.00
+
+		field := &bytes.Buffer{}
+
+		l := &Logger{Writer: field}
+		assert.NoError(t, l.Status(argCharacter, argHealth, argArmor))
+	})
 }
