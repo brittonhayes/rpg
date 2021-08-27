@@ -6,6 +6,7 @@ import (
 	"strings"
 	"sync/atomic"
 
+	"github.com/brittonhayes/rpg/color"
 	"github.com/brittonhayes/rpg/stat"
 )
 
@@ -37,6 +38,7 @@ type Character struct {
 	Abilities []Ability
 	Inventory []Item
 	Playable  bool
+	Color     color.Color
 }
 
 type Option func(*Character)
@@ -54,6 +56,7 @@ func New(options ...Option) *Character {
 		Abilities: nil,
 		Inventory: nil,
 		Playable:  false,
+		Color:     color.Gray,
 	}
 
 	for _, opt := range options {
@@ -83,6 +86,12 @@ func WithAttacks(light, heavy *Attack) Option {
 func WithName(name string) Option {
 	return func(character *Character) {
 		character.Name = name
+	}
+}
+
+func WithColor(c color.Color) Option {
+	return func(character *Character) {
+		character.Color = c
 	}
 }
 
@@ -130,6 +139,10 @@ func (c *Character) Stat(name string) *Stat {
 
 func (c *Character) IsCalled() string {
 	return c.Name
+}
+
+func (c *Character) HasColor() color.Color {
+	return c.Color
 }
 
 func (c *Character) IsPlayable() bool {

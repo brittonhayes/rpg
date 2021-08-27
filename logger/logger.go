@@ -26,6 +26,11 @@ const (
 	templateStatus = `Name={{.Character}} Health={{.Health}} Armor={{.Armor}}`
 )
 
+type Attack interface {
+	HasName() string
+	HasDamage() float64
+}
+
 func NewLogger(writer io.Writer) *Logger {
 	return &Logger{Writer: writer}
 }
@@ -36,7 +41,7 @@ func (l Level) String() string {
 
 func selectPrefix(level Level) string {
 	var prefix string
-	msgFmt := "%-8s "
+	msgFmt := "%-15s "
 	switch level {
 	case LevelInfo:
 		prefix = color.HiBlackString(msgFmt, level.String())
@@ -57,7 +62,7 @@ func (l *Logger) Log(level Level, msg string) {
 	fmt.Fprintln(l.Writer, prefix+msg)
 }
 
-func (l *Logger) Attack(attacker string, target string, attack string, damage float64) error {
+func (l *Logger) Attack(attacker string, target string, attack Attack) error {
 	prefix := selectPrefix(LevelCombat)
 	tpl, err := template.New("log").Parse(prefix + templateAttack + "\n")
 	if err != nil {
@@ -67,8 +72,8 @@ func (l *Logger) Attack(attacker string, target string, attack string, damage fl
 	return tpl.Execute(l.Writer, map[string]interface{}{
 		"Attacker": attacker,
 		"Target":   target,
-		"Attack":   attack,
-		"Damage":   damage,
+		"Attack":   attack.HasName(),
+		"Damage":   attack.HasDamage(),
 	})
 }
 

@@ -6,11 +6,12 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/brittonhayes/rpg/character"
 	"github.com/stretchr/testify/assert"
 )
 
 func prefix(level string) string {
-	return fmt.Sprintf("%-8s", strings.ToUpper(level))
+	return fmt.Sprintf("%-15s", strings.ToUpper(level))
 }
 
 func TestLogger(t *testing.T) {
@@ -34,13 +35,15 @@ func TestLogger(t *testing.T) {
 	t.Run("logger attack", func(t *testing.T) {
 		argAttacker := "Mario"
 		argTarget := "Bowser"
-		argAttack := "Stomp"
-		argDamage := 100.00
+		argAttack := &character.Attack{
+			Name:   "Stomp",
+			Damage: 10.00,
+		}
 
 		field := &bytes.Buffer{}
 
 		l := &Logger{Writer: field}
-		assert.NoError(t, l.Attack(argAttacker, argTarget, argAttack, argDamage))
+		assert.NoError(t, l.Attack(argAttacker, argTarget, argAttack))
 	})
 
 	t.Run("logger attack", func(t *testing.T) {

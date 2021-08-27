@@ -12,3 +12,17 @@ tasks:
     desc: Run go tests
     cmds:
       - go test -race -covermode=atomic -coverprofile=coverage.out ./...
+
+  example:
+    desc: Run examples
+    cmds:
+      - echo Combat Example
+      - go run _examples/attack/main.go
+      - echo ""
+      - echo Dialogue Example
+      - go run _examples/dialogue/main.go
+      - echo ""
+      - echo Scenario Example
+      - go run _examples/simple/main.go
+      - echo ""
+    silent: true

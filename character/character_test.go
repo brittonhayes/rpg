@@ -3,6 +3,7 @@ package character
 import (
 	"testing"
 
+	"github.com/brittonhayes/rpg/color"
 	"github.com/brittonhayes/rpg/stat"
 	"github.com/stretchr/testify/assert"
 )
@@ -20,6 +21,7 @@ func TestCharacter(t *testing.T) {
 			Abilities: nil,
 			Inventory: nil,
 			Playable:  false,
+			Color:     color.Gray,
 		}
 
 		assert.Equal(t, expect, New())

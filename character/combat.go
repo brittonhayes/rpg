@@ -22,6 +22,14 @@ func NewAttack(name string, kind AttackType, damage float64) *Attack {
 	return &Attack{Name: name, Kind: kind, Damage: damage}
 }
 
+func (a Attack) HasName() string {
+	return a.Name
+}
+
+func (a Attack) HasDamage() float64 {
+	return a.Damage
+}
+
 func (c *Character) IsDead() bool {
 	return c.Health <= 0.00
 }
